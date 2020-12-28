@@ -1,0 +1,143 @@
+<html>
+<head>
+  <title>Awesome Data Gathering Service</title>
+  <style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: Arial;
+  }
+  .header {
+/*    background-color: skyblue;*/
+    background-image: linear-gradient(#22ff99, #77ff11);
+    text-align: center;
+    padding: 1em;;
+    font-family: Cursive, Mono, Arial;
+  }
+  .header > h1 {
+    text-decoration: underline;
+  }
+  .section {
+    padding: 1em;
+  }
+  .form-wrapper {
+    
+  }
+  .form {
+    text-align: center;
+    padding: 1em;
+    border: 5px solid black;
+    border-radius: 10px;
+  }
+  .form > * {
+    margin: 0.5em;
+  }
+  button {
+    padding: 0.5em;
+    font-weight: bolder;
+    color: white;
+    background-image: linear-gradient(#61a1f4, #8dbdff);
+    cursor: pointer;
+  }
+  button:hover {
+    box-shadow: black 0px 1px 4px;
+  }
+  table tr:nth-child(even) {
+    background-color: grey;
+  }
+
+  .footer {
+    background-color: black;
+    color: white;
+  }
+  </style>
+</head>
+<body>
+  <div class="header"><h1>Awesome Data Gathering</h1></div>
+  <div class="section" style="background-image: linear-gradient(#ee2244, #ff1133)">
+  <p>This is the awesome data gathering service main page.</p>
+  <p>I'm sooo glad you're here. You have no idea.</p><p>We at Awesome Data Gathering Service(or ADGS) gather your data with or without your permission. You, as a valuable user, visit many websites on the internet. You send tweets, you like `pictures` and share the latest memes.</p><p>While you do this, we do our job. We collect your data(mostly without your permission). Here, on our main page, we provide the only opportunity you won't find anywhere near even the depths of the internet to finally let us take your data with your own permission. So go ahead. We've even done the arduous job of writing out the stupid form below.</p><p>Share your data and let us breach your privacy.</p></div>
+
+  <div class="section form-wrapper">
+    <div>We advise you to fill the form below with as much detail as you can. You can put anything you like. Don't be shy. Note that IP addresses may or may not be saved in our database.</div>
+    <form id="theform" onsubmit="return false">
+    <div class="form">
+    <div>Name<br> <input id="name" type="text"></div>
+    <div>Data<br> <textarea id="data"></textarea></div>
+    <div><button type="submit" onclick="senddata()">TAKE MY DATA, THANKS</button></div>
+    </div>
+    </form>
+  </div>
+  <div class="section">Look at all the data of all the people who've filled this form before. Though we don't have to, we feel that it's our responsibility to lie to our users that the section below wasn't created because this data was already leaked, it was because we believe in transparency and believe that whatever we store in our database, we will show you.</div>
+  <button onclick="getData()">Refresh data</button>
+  <div class="section">
+    <table cellspacing=0i id="thetable">
+      <tr><th>Name</th><th>Data</th></tr>
+      <tr><td>One weird name</td><td>I do illegal stuff. i'm confident this fact won't ever be used against me in case i do something they don't like</td></tr>
+      <tr><td>Good name</td><td>I'm a good citizen. I never do bad stuff. I pay my tax. I have a good job. My life is boring. Okay, I'll tell you a joke. The guy spying on me knows all my jokes are bad so he won't read this. please send help. please. i don't know what to do. i don't know what to do. i don't know. i'm dying. i want to die. i don't know what to do.</td></tr>
+      <tr><td>Kitty</td><td>I'm literally a cat. I meow a lot. I don't have a good sense of what you do but I meow because I'm free. I meow away into the sunset for special effects.</td></tr>
+    </table>
+  </div>
+  <div class="section footer">
+    All of the above is entirely fictional, any resemblance to any real life entity living or dead is purely coincidental. I do not endorse or support or am agains anything or anyone in any manner(just playing it safe idk).
+  </div>
+  <script>
+    function validate() {
+      var name = document.getElementById("name").value;
+      var data = document.getElementById("data").value;
+
+      if(name.includes("<") || name.includes(">") || data.includes("<") || data.includes(">")) {
+       alert("Okay, the < and > characters are very sharp. I cannot accept them.. please remove then. thanks.");
+        ;
+        return false;
+      } else if(name.length == 0 || data.length == 0) {
+        alert("Type something first. :<");
+        return false;
+      }
+      alert("Storing the data. Thanks! By doing this, you have given us permission to use your data in any manner including and not limited to selling it to the highest bidder or using it for other potential profit.");
+      return true;
+    }
+
+     var base_url = window.location.origin;
+    function senddata() {
+      if(!validate())
+        return false;
+      var name = document.getElementById("name").value;
+      var data = document.getElementById("data").value;
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", base_url+"/takedata", true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({
+        name: name,
+        data: data
+      }));
+      document.getElementById("theform").reset();
+//	    window.location.reload();
+    }
+
+	function getData() {
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", base_url+"/getdata", true);
+		xhr.responseType = 'json';
+		xhr.onreadystatechange = function() {
+//			if(this.readystate == 4) {
+				console.log("success");
+//				console.log(this.response);
+				var table = document.getElementById("thetable");
+				var str = "<tr><th>Name</th><th>Data</th></tr>";
+				var results = this.response.result;
+				for(var i=0;i<results.length;i++)
+					str += "<tr><td>"+results[i].name+"</td><td>"+results[i].data+"</td>";
+				table.innerHTML = str;
+
+//			}
+		}
+		xhr.send();
+	}
+//getData();
+  </script>
+</body>
+</html>
